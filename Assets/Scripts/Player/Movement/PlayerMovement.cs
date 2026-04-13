@@ -9,8 +9,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float walkSpeed = 2f;
     [SerializeField] private float runSpeed = 3.5f;
     [SerializeField] private float crouchSpeed = 2f;
-    private const float groundedMovementFactor = 1f;
-    private const float airborneMovementFactor = 0.35f;
 
     [Header("Jump and Fall")]
     [SerializeField] private LayerMask groundLayer;
