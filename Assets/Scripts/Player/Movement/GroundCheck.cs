@@ -2,25 +2,13 @@ using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
 {
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private PlayerMovement movementScript;
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (!other.CompareTag("Ground"))
-        {
-            movementScript.SetIsGroundedValue(false);
-        }
-        else
-        {
-            movementScript.SetIsGroundedValue(true);
-        }
+        bool grounded = Physics.CheckSphere(transform.position, 0.2f, groundLayer);
+        movementScript.SetIsGroundedValue(grounded);
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Ground"))
-        {
-            movementScript.SetIsGroundedValue(false);
-        }
-    }
 }

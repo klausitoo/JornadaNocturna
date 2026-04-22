@@ -70,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         UpdateRigidBodyDamping();
         HandleMovement();
         HandleStepClimbing();
+        Debug.Log(_isGrounded);
     }
 
     private void FixedUpdate()
