@@ -22,7 +22,6 @@ public class CameraInteraction : MonoBehaviour
             {
                 if (textHint != null) textHint.SetActive(true);
 
-                // PRUEBA A: Usar el Input System (Tu forma actual)
                 if (interactAction.action.WasPressedThisFrame())
                 {
                     interactable.Interact();
