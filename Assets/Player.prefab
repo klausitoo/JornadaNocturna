@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2125631692286673365}
+  - component: {fileID: 3943589789854341118}
   - component: {fileID: 8586858584124899514}
   m_Layer: 6
   m_Name: GroundCheck
@@ -32,6 +33,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7796969548731897929}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3943589789854341118
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2373410975583265783}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 0.2, z: 0.5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8586858584124899514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,9 +66,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af31fba8049afbc458301da925b1dd49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   movementScript: {fileID: 3596780005464936497}
 --- !u!1 &3739946022431324140
 GameObject:
@@ -518,7 +537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ce1a9e4a08100f4680ff744a2d36994, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraDoorScript.CameraOpenDoor
-  interactDistance: 3
+  distanceOpen: 3
   textHint: {fileID: 0}
   interactAction: {fileID: 0}
 --- !u!114 &5250570057071057991

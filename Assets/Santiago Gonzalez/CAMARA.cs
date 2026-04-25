@@ -13,7 +13,6 @@ public class SimpleMouseLook : MonoBehaviour
             playerBody = transform.parent;
             
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
     
     void Update()
