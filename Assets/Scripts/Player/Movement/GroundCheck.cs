@@ -3,24 +3,13 @@ using UnityEngine;
 public class GroundCheck : MonoBehaviour
 {
     [SerializeField] private PlayerMovement movementScript;
+    [SerializeField] private LayerMask groundLayer;
+    private bool isGrounded;
 
-    private void OnTriggerEnter(Collider other)
+    void Update()
     {
-        if (!other.CompareTag("Ground"))
-        {
-            movementScript.SetIsGroundedValue(false);
-        }
-        else
-        {
-            movementScript.SetIsGroundedValue(true);
-        }
-    }
+        isGrounded = Physics.CheckSphere(transform.position, 0.2f, groundLayer);
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Ground"))
-        {
-            movementScript.SetIsGroundedValue(false);
-        }
+        movementScript.SetIsGroundedValue(isGrounded);
     }
 }
