@@ -42,7 +42,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
         _targetHeight = standingHeight;
         _currentHeight = standingHeight;
         coll.height = standingHeight;
