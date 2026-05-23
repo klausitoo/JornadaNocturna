@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "Jueguito-de-terror.slnx"
+    "dotnet.defaultSolution": "CARRERA DE AUTOS-PARCIAL01-SANTIAGOGONZALEZ.sln"
 }
