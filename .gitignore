@@ -79,7 +79,5 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 **/[Aa]ssets/[Ss]treamingAssets/aa.meta
 **/[Aa]ssets/[Ss]treamingAssets/aa/*
-
-# ProBuilder editor preferences and logs
-ProBuilderLog.txt
-*.probuilder
+/Library
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
