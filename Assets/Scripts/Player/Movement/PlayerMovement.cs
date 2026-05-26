@@ -69,6 +69,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        CheckGround();
+        
         UpdateRigidBodyDamping();
         HandleMovement();
         HandleStepClimbing();
@@ -91,6 +93,22 @@ public class PlayerMovement : MonoBehaviour
         {
             //rb.AddForce(new(0, jumpForce, 0), ForceMode.Impulse);
         }
+    }
+    
+    private void CheckGround()
+    {
+        _isGrounded = Physics.Raycast(
+            transform.position,
+            Vector3.down,
+            (_currentHeight / 2f) + 0.2f,
+            groundLayer
+        );
+
+        Debug.DrawRay(
+            transform.position,
+            Vector3.down * ((_currentHeight / 2f) + 0.2f),
+            Color.green
+        );
     }
 
     private void UpdateRigidBodyDamping()
