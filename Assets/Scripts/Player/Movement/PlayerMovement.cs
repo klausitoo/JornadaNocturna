@@ -38,6 +38,20 @@ public class PlayerMovement : MonoBehaviour
     private bool _isCrouching;
     private float _targetHeight;
 
+    private float maxStamina = 100f;
+    private float currentStamina;
+    private float staminaRegenRate = 20f;
+    private float staminaRegenDelay = 2f;
+    private float staminaDrainRate = 30f;
+
+    public float MaxStamina => maxStamina;
+    public float CurrentStamina => currentStamina;
+
+
+    private float staminaRegenDelayTimer;
+
+    private bool canRun => currentStamina > 0;
+
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -45,6 +59,8 @@ public class PlayerMovement : MonoBehaviour
         _targetHeight = standingHeight;
         _currentHeight = standingHeight;
         coll.height = standingHeight;
+        currentStamina = maxStamina;
+        staminaRegenDelayTimer = staminaRegenDelay;
     }
 
     private void OnEnable()
@@ -70,9 +86,11 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         CheckGround();
-        
+        Debug.Log(currentStamina);
+        Debug.Log(_isRunning);
         UpdateRigidBodyDamping();
         HandleMovement();
+        HandleStamina();
         HandleStepClimbing();
     }
 
@@ -164,12 +182,47 @@ public class PlayerMovement : MonoBehaviour
 
     private void Sprint(InputAction.CallbackContext context)
     {
+        if (!canRun) return;
+
         _isRunning = context.performed;
     }
 
+    private void HandleStamina()
+    {
+        if (_isRunning) return;
+
+        if (staminaRegenDelayTimer > 0)
+        {
+            staminaRegenDelayTimer -= Time.deltaTime;
+            if (staminaRegenDelayTimer < 0)
+            {
+                staminaRegenDelayTimer = 0;
+            }
+                
+            return;
+        }
+
+        if (currentStamina < maxStamina)
+        {
+            currentStamina += staminaRegenRate * Time.deltaTime;
+            currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+        }
+    }
     private void HandleMovement()
     {
+        if (!canRun)
+        {
+            _isRunning = false;
+        }
+
         float currentSpeed = _isCrouching ? crouchSpeed : _isRunning ? runSpeed : walkSpeed;
+
+        if (_isRunning)
+        {
+            staminaRegenDelayTimer = staminaRegenDelay;
+            currentStamina -= staminaDrainRate * Time.deltaTime;
+            currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+        }
 
         Vector3 forward = cam.forward;
         Vector3 right = cam.right;

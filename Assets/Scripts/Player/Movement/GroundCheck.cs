@@ -12,5 +12,4 @@ public class GroundCheck : MonoBehaviour
 
         movementScript.SetIsGroundedValue(isGrounded);
     }
-
 }

@@ -16,9 +16,17 @@ public class Enemy : MonoBehaviour
     public float attackDistance = 3f;
     public float attackInterval = 2f;
 
+    [Header("Damage")]
+    public int damageAmount = 1; 
+    public bool damageOnlyOncePerAttack = true; 
+    private bool hasDamagedInThisAttack = false;
+
     private NavMeshAgent Agent;
     private Animator anim;
     private bool isAttacking = false;
+    
+    // Referencia al sistema de vida del jugador
+    private Sistemadevida playerLifeSystem;
 
     void Start()
     {
@@ -34,11 +42,18 @@ public class Enemy : MonoBehaviour
             if (playerObj != null)
             {
                 Player = playerObj.transform;
+                
+                playerLifeSystem = playerObj.GetComponent<Sistemadevida>();
             }
             else
             {
                 Debug.LogError("No se encontró el objeto con tag Player");
             }
+        }
+        else
+        {
+            
+            playerLifeSystem = Player.GetComponent<Sistemadevida>();
         }
     }
 
@@ -67,11 +82,15 @@ public class Enemy : MonoBehaviour
                 Agent.isStopped = false;
                 Agent.SetDestination(Player.position);
                 anim.SetBool("isWalking", true);
+                
+                hasDamagedInThisAttack = false;
             }
         }
         else
         {
             Patrol();
+            
+            hasDamagedInThisAttack = false;
         }
     }
 
@@ -109,8 +128,7 @@ public class Enemy : MonoBehaviour
 
         if (direction != Vector3.zero)
         {
-             Quaternion lookRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180, 0);
-
+            Quaternion lookRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180, 0);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
         }
     }
@@ -120,10 +138,66 @@ public class Enemy : MonoBehaviour
         isAttacking = true;
         Agent.isStopped = true;
         anim.SetTrigger("Attack");
+        
+        // Resetear flag de daño al comenzar el ataque
+        hasDamagedInThisAttack = false;
+        
+        // Esperar un momento para aplicar el daño (cuando el golpe impacta)
+      
+        float damageDelay = 0.5f;
+        yield return new WaitForSeconds(damageDelay);
+        
+        // Aplicar daño solo si el jugador sigue en rango
+        if (!hasDamagedInThisAttack && damageOnlyOncePerAttack)
+        {
+            ApplyDamageToPlayer();
+            hasDamagedInThisAttack = true;
+        }
 
-        yield return new WaitForSeconds(attackInterval);
+        yield return new WaitForSeconds(attackInterval - damageDelay);
 
         Agent.isStopped = false;
         isAttacking = false;
+    }
+    
+   
+    /// Aplica daño al jugador
+  
+    void ApplyDamageToPlayer()
+    {
+        if (playerLifeSystem != null && !playerLifeSystem.IsGameOver())
+        {
+            // Verificar que el jugador aún esté en rango de ataque
+            float distanceToPlayer = Vector3.Distance(transform.position, Player.position);
+            if (distanceToPlayer <= attackDistance + 1f) // Pequeño margen
+            {
+                playerLifeSystem.TakeDamage();
+                Debug.Log($"Enemigo atacó! Daño aplicado. Vidas restantes: {playerLifeSystem.GetCurrentLives()}");
+            }
+        }
+        else if (playerLifeSystem == null)
+        {
+            Debug.LogWarning("No se encontró el componente FPSLifeSystem en el jugador");
+        }
+    }
+    
+  
+    public void OnAttackHit()
+    {
+        if (isAttacking && damageOnlyOncePerAttack && !hasDamagedInThisAttack)
+        {
+            ApplyDamageToPlayer();
+            hasDamagedInThisAttack = true;
+        }
+    }
+    
+    
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
 }
