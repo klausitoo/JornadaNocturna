@@ -210,7 +210,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5204171984822019573, guid: cc3caeae4f72a904e931ce59df84d73b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1575859854}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4788094515730199206, guid: cc3caeae4f72a904e931ce59df84d73b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1211732474}
   m_SourcePrefab: {fileID: 100100000, guid: cc3caeae4f72a904e931ce59df84d73b, type: 3}
 --- !u!4 &11922766 stripped
 Transform:
@@ -80542,6 +80545,35 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &1211732469 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4788094515730199206, guid: cc3caeae4f72a904e931ce59df84d73b, type: 3}
+  m_PrefabInstance: {fileID: 5978640}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1211732474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211732469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39110db26a48d504b8fe41d6e252c0ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Sistemadevida
+  maxLives: 3
+  lifeBars: []
+  activeBarColor: {r: 0, g: 1, b: 0, a: 1}
+  depletedBarColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  damageOverlay: {fileID: 0}
+  damageOverlayDuration: 0.2
+  vignetteEffect: {fileID: 0}
+  damageSound: {fileID: 0}
+  gameOverSound: {fileID: 0}
+  audioSource: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  invincibilityDuration: 1.5
 --- !u!114 &1230482289
 MonoBehaviour:
   m_ObjectHideFlags: 0
