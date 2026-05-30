@@ -33,7 +33,7 @@ public class LevelTransition : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
 
         // Level change
-        if (level1 != null) level1.SetActive(false);
+        //if (level1 != null) level1.SetActive(false);
         if (level2 != null) level2.SetActive(true);
 
     }

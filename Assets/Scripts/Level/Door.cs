@@ -5,13 +5,13 @@ namespace DoorScript
     [RequireComponent(typeof(AudioSource))]
     public class Door : MonoBehaviour, IInteractable
     {
-        [Header("Configuración")]
+        [Header("Configuration")]
         [SerializeField] private bool open = false;
         [SerializeField] private float smooth = 1.0f;
         [SerializeField] private float doorOpenAngle = -90.0f;
         [SerializeField] private float doorCloseAngle = 0.0f;
 
-        [Header("Bloqueo")]
+        [Header("Lock")]
         [SerializeField] private bool isLocked = true;
         [SerializeField] private KeyType requiredKey = KeyType.Ninguna;
 
