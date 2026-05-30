@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
     private bool isAttacking = false;
     
     // Referencia al sistema de vida del jugador
-    private Sistemadevida playerLifeSystem;
+    private HealthSystem playerLifeSystem;
 
     void Start()
     {
@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour
             {
                 Player = playerObj.transform;
                 
-                playerLifeSystem = playerObj.GetComponent<Sistemadevida>();
+                playerLifeSystem = playerObj.GetComponent<HealthSystem>();
             }
             else
             {
@@ -53,7 +53,7 @@ public class Enemy : MonoBehaviour
         else
         {
             
-            playerLifeSystem = Player.GetComponent<Sistemadevida>();
+            playerLifeSystem = Player.GetComponent<HealthSystem>();
         }
     }
 
