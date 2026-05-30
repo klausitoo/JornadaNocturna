@@ -83,8 +83,8 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         CheckGround();
-        Debug.Log(currentStamina);
-        Debug.Log(_isRunning);
+        //Debug.Log(currentStamina);
+        //Debug.Log(_isRunning);
         UpdateRigidBodyDamping();
         HandleMovement();
         HandleStamina();
