@@ -10,9 +10,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float runSpeed = 3.5f;
     [SerializeField] private float crouchSpeed = 2f;
 
-    [Header("Jump and Fall")]
+    [Header("Fall")]
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float jumpForce = 7f;
 
     [Header("Crouching")]
     private const float standingHeight = 2f;
@@ -67,7 +66,6 @@ public class PlayerMovement : MonoBehaviour
     {
         moveAction.action.performed += StoreMovementInput;
         moveAction.action.canceled += StoreMovementInput;
-        jumpAction.action.performed += Jump;
         sprintAction.action.performed += Sprint;
         sprintAction.action.canceled += Sprint;
         crouchAction.action.performed += Crouch;
@@ -77,7 +75,6 @@ public class PlayerMovement : MonoBehaviour
     {
         moveAction.action.performed -= StoreMovementInput;
         moveAction.action.canceled -= StoreMovementInput;
-        jumpAction.action.performed -= Jump;
         sprintAction.action.performed -= Sprint;
         sprintAction.action.canceled -= Sprint;
         crouchAction.action.performed -= Crouch;
@@ -103,14 +100,6 @@ public class PlayerMovement : MonoBehaviour
     private void StoreMovementInput(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
-    }
-
-    private void Jump(InputAction.CallbackContext context)
-    {
-        if (_isGrounded)
-        {
-            //rb.AddForce(new(0, jumpForce, 0), ForceMode.Impulse);
-        }
     }
     
     private void CheckGround()

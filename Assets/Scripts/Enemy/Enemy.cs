@@ -4,47 +4,29 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
-    private enum EnemyState
-    {
-        Idle,
-        Chase,
-        Attack,
-        Search
-    }
-
-    [Header("Patrulla opcional")]
-    public bool patrolWhileIdle = false;
+    [Header("Patrol")]
     public Transform[] patrolPoints;
     private int currentPatrolIndex = 0;
 
     [Header("Player")]
     public Transform Player;
-    private PlayerStealthState playerStealth;
 
-    [Header("Detección")]
-    public float normalDetectionRange = 3f;
-    public float runningDetectionRange = 10f;
-    public float flashlightDetectionRange = 12f;
-    public float loseInterestTime = 3f;
-
-    [Header("Ataque")]
+    [Header("Ranges")]
+    public float detectionRange = 10f;
     public float attackDistance = 3f;
     public float attackInterval = 2f;
 
     [Header("Damage")]
-    public int damageAmount = 1;
-    public bool damageOnlyOncePerAttack = true;
+    public int damageAmount = 1; 
+    public bool damageOnlyOncePerAttack = true; 
     private bool hasDamagedInThisAttack = false;
 
     private NavMeshAgent Agent;
     private Animator anim;
     private bool isAttacking = false;
-
-    private Sistemadevida playerLifeSystem;
-
-    private EnemyState currentState = EnemyState.Idle;
-    private Vector3 lastKnownPlayerPosition;
-    private float timeWithoutSeeingPlayer = 0f;
+    
+    // Referencia al sistema de vida del jugador
+    private HealthSystem playerLifeSystem;
 
     void Start()
     {
@@ -60,42 +42,19 @@ public class Enemy : MonoBehaviour
             if (playerObj != null)
             {
                 Player = playerObj.transform;
+                
+                playerLifeSystem = playerObj.GetComponent<HealthSystem>();
             }
             else
             {
                 Debug.LogError("No se encontró el objeto con tag Player");
-                return;
             }
-        }
-
-        playerLifeSystem = Player.GetComponent<Sistemadevida>();
-        playerStealth = Player.GetComponent<PlayerStealthState>();
-        
-        if (playerStealth == null)
-        {
-            playerStealth = Player.GetComponentInParent<PlayerStealthState>();
-        }
-
-        if (playerStealth == null)
-        {
-            playerStealth = Player.GetComponentInChildren<PlayerStealthState>();
-        }
-
-        if (playerStealth == null)
-        {
-            playerStealth = PlayerStealthState.Instance;
-        }
-
-        if (playerStealth == null)
-        {
-            Debug.LogError("El enemigo NO encontró PlayerStealthState.");
         }
         else
         {
-            Debug.Log("El enemigo encontró PlayerStealthState correctamente.");
+            
+            playerLifeSystem = Player.GetComponent<HealthSystem>();
         }
-
-        GoIdle();
     }
 
     void Update()
@@ -103,169 +62,35 @@ public class Enemy : MonoBehaviour
         if (Player == null) return;
 
         float distance = Vector3.Distance(transform.position, Player.position);
-
-        // Si el jugador está escondido, el enemigo deja de seguirlo
-        if (PlayerIsHiding())
+        
+        if (distance <= detectionRange)
         {
-            LosePlayer();
-            return;
-        }
-
-        bool detectedPlayer = CanDetectPlayer(distance);
-
-        if (detectedPlayer)
-        {
-            lastKnownPlayerPosition = Player.position;
-            timeWithoutSeeingPlayer = 0f;
-
+            LookAtTarget(Player.position);
+            
             if (distance <= attackDistance)
             {
-                AttackPlayer();
+                Agent.ResetPath();
+                anim.SetBool("isWalking", false);
+
+                if (!isAttacking)
+                {
+                    StartCoroutine(PlayAttackAnimation());
+                }
             }
             else
             {
-                ChasePlayer();
-            }
-        }
-        else
-        {
-            HandleNotDetected();
-        }
-    }
-
-    private bool CanDetectPlayer(float distance)
-    {
-        float currentDetectionRange = normalDetectionRange;
-
-        if (playerStealth != null)
-        {
-            if (playerStealth.IsRunning)
-            {
-                currentDetectionRange = Mathf.Max(currentDetectionRange, runningDetectionRange);
-            }
-
-            if (playerStealth.IsFlashlightOn)
-            {
-                currentDetectionRange = Mathf.Max(currentDetectionRange, flashlightDetectionRange);
-                Debug.Log("Linterna prendida detectada por el enemigo. Rango actual: " + currentDetectionRange);
-            }
-        }
-        else
-        {
-            Debug.LogError("playerStealth es NULL en Enemy.");
-        }
-
-        return distance <= currentDetectionRange;
-    }
-
-    private bool PlayerIsHiding()
-    {
-        return playerStealth != null && playerStealth.IsHiding;
-    }
-
-    private void ChasePlayer()
-    {
-        currentState = EnemyState.Chase;
-
-        Agent.isStopped = false;
-        Agent.SetDestination(Player.position);
-
-        LookAtTarget(Player.position);
-
-        if (anim != null)
-        {
-            anim.SetBool("isWalking", true);
-        }
-
-        hasDamagedInThisAttack = false;
-    }
-
-    private void AttackPlayer()
-    {
-        currentState = EnemyState.Attack;
-
-        Agent.ResetPath();
-
-        if (anim != null)
-        {
-            anim.SetBool("isWalking", false);
-        }
-
-        LookAtTarget(Player.position);
-
-        if (!isAttacking)
-        {
-            StartCoroutine(PlayAttackAnimation());
-        }
-    }
-
-    private void HandleNotDetected()
-    {
-        if (currentState == EnemyState.Chase || currentState == EnemyState.Attack)
-        {
-            currentState = EnemyState.Search;
-        }
-
-        if (currentState == EnemyState.Search)
-        {
-            timeWithoutSeeingPlayer += Time.deltaTime;
-
-            Agent.isStopped = false;
-            Agent.SetDestination(lastKnownPlayerPosition);
-
-            if (anim != null)
-            {
+                Agent.isStopped = false;
+                Agent.SetDestination(Player.position);
                 anim.SetBool("isWalking", true);
-            }
-
-            LookAtTarget(lastKnownPlayerPosition);
-
-            if (timeWithoutSeeingPlayer >= loseInterestTime)
-            {
-                GoIdle();
+                
+                hasDamagedInThisAttack = false;
             }
         }
         else
         {
-            if (patrolWhileIdle)
-            {
-                Patrol();
-            }
-            else
-            {
-                GoIdle();
-            }
-        }
-
-        hasDamagedInThisAttack = false;
-    }
-
-    private void LosePlayer()
-    {
-        StopAllCoroutines();
-
-        isAttacking = false;
-        hasDamagedInThisAttack = false;
-        timeWithoutSeeingPlayer = 0f;
-
-        GoIdle();
-
-        Debug.Log("El enemigo perdió al jugador porque se escondió.");
-    }
-
-    private void GoIdle()
-    {
-        currentState = EnemyState.Idle;
-
-        if (Agent != null)
-        {
-            Agent.ResetPath();
-            Agent.isStopped = true;
-        }
-
-        if (anim != null)
-        {
-            anim.SetBool("isWalking", false);
+            Patrol();
+            
+            hasDamagedInThisAttack = false;
         }
     }
 
@@ -273,14 +98,12 @@ public class Enemy : MonoBehaviour
     {
         if (patrolPoints == null || patrolPoints.Length == 0)
         {
-            GoIdle();
+            Agent.ResetPath();
+            anim.SetBool("isWalking", false);
             return;
         }
 
-        currentState = EnemyState.Idle;
-
         Agent.isStopped = false;
-
         Transform targetPoint = patrolPoints[currentPatrolIndex];
         Agent.SetDestination(targetPoint.position);
         LookAtTarget(targetPoint.position);
@@ -295,10 +118,7 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (anim != null)
-        {
-            anim.SetBool("isWalking", true);
-        }
+        anim.SetBool("isWalking", true);
     }
 
     void LookAtTarget(Vector3 targetPosition)
@@ -317,24 +137,21 @@ public class Enemy : MonoBehaviour
     {
         isAttacking = true;
         Agent.isStopped = true;
-
-        if (anim != null)
-        {
-            anim.SetTrigger("Attack");
-        }
-
+        anim.SetTrigger("Attack");
+        
+        // Resetear flag de daño al comenzar el ataque
         hasDamagedInThisAttack = false;
-
+        
+        // Esperar un momento para aplicar el daño (cuando el golpe impacta)
+      
         float damageDelay = 0.5f;
         yield return new WaitForSeconds(damageDelay);
-
-        if (!PlayerIsHiding())
+        
+        // Aplicar daño solo si el jugador sigue en rango
+        if (!hasDamagedInThisAttack && damageOnlyOncePerAttack)
         {
-            if (!hasDamagedInThisAttack && damageOnlyOncePerAttack)
-            {
-                ApplyDamageToPlayer();
-                hasDamagedInThisAttack = true;
-            }
+            ApplyDamageToPlayer();
+            hasDamagedInThisAttack = true;
         }
 
         yield return new WaitForSeconds(attackInterval - damageDelay);
@@ -342,48 +159,44 @@ public class Enemy : MonoBehaviour
         Agent.isStopped = false;
         isAttacking = false;
     }
-
+    
+   
+    /// Aplica daño al jugador
+  
     void ApplyDamageToPlayer()
     {
         if (playerLifeSystem != null && !playerLifeSystem.IsGameOver())
         {
+            // Verificar que el jugador aún esté en rango de ataque
             float distanceToPlayer = Vector3.Distance(transform.position, Player.position);
-
-            if (distanceToPlayer <= attackDistance + 1f && !PlayerIsHiding())
+            if (distanceToPlayer <= attackDistance + 1f) // Pequeño margen
             {
                 playerLifeSystem.TakeDamage();
-                Debug.Log($"Enemigo atacó. Vidas restantes: {playerLifeSystem.GetCurrentLives()}");
+                Debug.Log($"Enemigo atacó! Daño aplicado. Vidas restantes: {playerLifeSystem.GetCurrentLives()}");
             }
         }
         else if (playerLifeSystem == null)
         {
-            Debug.LogWarning("No se encontró el componente Sistemadevida en el jugador");
+            Debug.LogWarning("No se encontró el componente FPSLifeSystem en el jugador");
         }
     }
-
+    
+  
     public void OnAttackHit()
     {
         if (isAttacking && damageOnlyOncePerAttack && !hasDamagedInThisAttack)
         {
-            if (!PlayerIsHiding())
-            {
-                ApplyDamageToPlayer();
-                hasDamagedInThisAttack = true;
-            }
+            ApplyDamageToPlayer();
+            hasDamagedInThisAttack = true;
         }
     }
-
+    
+    
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, normalDetectionRange);
-
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, runningDetectionRange);
-
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, flashlightDetectionRange);
-
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackDistance);
     }

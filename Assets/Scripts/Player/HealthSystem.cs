@@ -2,18 +2,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class Sistemadevida : MonoBehaviour
+public class HealthSystem : MonoBehaviour
 {
-    [Header("Configuración de Vida")]
+    [Header("HealthConfig")]
     public int maxLives = 3;
     private int currentLives;
     
-    [Header("Referencias UI")]
+    [Header("UI References")]
     public Image[] lifeBars; // Las 3 barras de vida en la UI
     public Color activeBarColor = Color.green;
     public Color depletedBarColor = Color.gray;
     
-    [Header("Efectos Visuales")]
+    [Header("Visual Effects")]
     public GameObject damageOverlay; // Pantalla roja al recibir daño
     public float damageOverlayDuration = 0.2f;
     public Image vignetteEffect; // Efecto de viñeta opcional
@@ -34,7 +34,7 @@ public class Sistemadevida : MonoBehaviour
     private PlayerMovement playerMovement; 
     
     // Para debugging
-    private string lastAttacker = "";
+    //private string lastAttacker = "";
     
     void Start()
     {
