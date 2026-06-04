@@ -1,7 +1,9 @@
 public enum KeyType
 {
     Ninguna,
+    Abierta,
     Roja,
     Verde,
-    Azul
+    Azul,
+    Amarilla
 }
