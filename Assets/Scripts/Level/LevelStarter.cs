@@ -59,11 +59,11 @@ public class LevelStarter : MonoBehaviour, IInteractable
                 {
                     if (mat.HasProperty("_Color"))
                     {
-                        mat.SetColor("_Color", new Color32(1, 1, 1, 255));
+                        mat.SetColor("_Color", new Color32(5, 5, 5, 255));
                     }
                 }
             }
-            RenderSettings.ambientLight = new Color32(1, 1, 1, 255);
+            RenderSettings.ambientLight = new Color32(5, 5, 5, 255);
         }
     }
 }
