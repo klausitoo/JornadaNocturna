@@ -1,10 +1,16 @@
 ﻿using UnityEngine;
+using TMPro;
+using System.Collections;
 
 namespace DoorScript
 {
     [RequireComponent(typeof(AudioSource))]
     public class Door : MonoBehaviour, IInteractable
     {
+        [SerializeField] private GameObject mensajeMochila;
+        [SerializeField] private float tiempoMensaje = 3f;
+        [SerializeField] private bool requiereMochila = false;
+
         [Header("Configuration")]
         [SerializeField] private bool open = false;
         [SerializeField] private float smooth = 1.0f;
@@ -46,6 +52,13 @@ namespace DoorScript
 
         public void Interact()
         {
+            Debug.Log("Estado mochila: " + LevelStarter.cosasRecogidas);
+            if (requiereMochila && !LevelStarter.cosasRecogidas)
+            {
+                StartCoroutine(MostrarMensaje());
+                return;
+            }
+
             Debug.Log("Puerta tocada: " + gameObject.name, gameObject);
             Debug.Log("Llave requerida por esta puerta: " + requiredKey, gameObject);
 
@@ -71,6 +84,9 @@ namespace DoorScript
                 {
                     Debug.Log("Puerta bloqueada. No tenés la llave correcta.", gameObject);
                     PlayLockedSound();
+
+                    StartCoroutine(MostrarMensaje());
+
                     return;
                 }
 
@@ -109,6 +125,15 @@ namespace DoorScript
         {
             open = false;
             isLocked = true;
+        }
+
+        private IEnumerator MostrarMensaje()
+        {
+            mensajeMochila.SetActive(true);
+
+            yield return new WaitForSeconds(tiempoMensaje);
+
+            mensajeMochila.SetActive(false);
         }
     }
 }

@@ -8,13 +8,22 @@ public class LevelStarter : MonoBehaviour, IInteractable
     [SerializeField] float countdownDuration = 5f;
     [SerializeField] GameObject playerFlashlight;
 
+    public static bool cosasRecogidas = false;
+
     private bool _isActivated = false;
 
     public void Interact()
     {
+
+
+
         if (!_isActivated)
         {
+
+
             _isActivated = true;
+            cosasRecogidas = true;
+            Debug.Log("MOCHILA RECOGIDA");
 
             if (playerFlashlight != null)
             {
@@ -34,6 +43,7 @@ public class LevelStarter : MonoBehaviour, IInteractable
             }
 
             StartCoroutine(LightsOutSequence());
+           
         }
     }
 
