@@ -16,6 +16,7 @@ public class GameEndDoor : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        Debug.Log("GAME END DOOR EJECUTADO");
         if (isLevelEnding) return;
 
         if (PlayerKeyInventory.Instance.HasKey(KeyType.Roja))

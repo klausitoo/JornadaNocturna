@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3520728340998992027}
   - component: {fileID: 5659246723956134194}
   - component: {fileID: 297539163424201661}
+  - component: {fileID: 1711484935877898507}
   m_Layer: 0
   m_Name: rust_key
   m_TagString: Untagged
@@ -103,4 +104,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b428ae90ec31f1249a81173398dc8b26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyItem
-  keyType: 0
+  keyType: 2
+--- !u!65 &1711484935877898507
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283374007588888330}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.7542351, y: 0.2015345, z: 0.23262405}
+  m_Center: {x: -0.039399914, y: 0.081214316, z: 0.0000000073253177}

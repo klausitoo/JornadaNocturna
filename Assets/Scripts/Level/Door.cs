@@ -92,6 +92,13 @@ namespace DoorScript
 
                 isLocked = false;
                 Debug.Log("Puerta desbloqueada con: " + requiredKey, gameObject);
+                GameEndDoor endDoor = GetComponent<GameEndDoor>();
+
+                if (endDoor != null)
+                {
+                    endDoor.Interact();
+                    return;
+                }
             }
 
             OpenDoor();
