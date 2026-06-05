@@ -18,7 +18,7 @@ public class GameEndDoor : MonoBehaviour, IInteractable
     {
         if (isLevelEnding) return;
 
-        if (debugHasKey)
+        if (PlayerKeyInventory.Instance.HasKey(KeyType.Roja))
         {
             Debug.Log("Key accepted. Ending level...");
             isLevelEnding = true;
@@ -26,9 +26,9 @@ public class GameEndDoor : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("Door is locked. You need the key.");
-            // Opcional: Reproducir sonido de puerta cerrada o mostrar UI temporal
+            Debug.Log("Door is locked. You need the red key.");
         }
+     
     }
 
     private IEnumerator EndLevelRoutine()
