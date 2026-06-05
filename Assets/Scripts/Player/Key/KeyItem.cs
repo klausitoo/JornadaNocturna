@@ -1,20 +1,14 @@
 using UnityEngine;
 
-public class KeyItem : MonoBehaviour
+public class KeyItem : MonoBehaviour ,IInteractable
 {
-    [SerializeField] private KeyType keyType = KeyType.Ninguna;
+    [SerializeField] private KeyType keyType = KeyType.Roja;
 
-    private void OnTriggerEnter(Collider other)
+    
+
+    public void Interact()
     {
-        if (other.CompareTag("Player"))
-        {
-            PlayerKeyInventory inventory = other.GetComponent<PlayerKeyInventory>();
-
-            if (inventory != null)
-            {
-                inventory.AddKey(keyType);
-                Destroy(gameObject);
-            }
-        }
+        PlayerKeyInventory.Instance.AddKey(keyType);
+        Destroy(gameObject);
     }
 }
