@@ -152,7 +152,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Debug.LogError("playerStealth es NULL en Enemy.");
+            //Debug.LogError("playerStealth es NULL en Enemy.");
         }
 
         return distance <= currentDetectionRange;

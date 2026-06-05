@@ -5,25 +5,26 @@ using Unity.Cinemachine;
 public class MovingElevator : MonoBehaviour
 {
     [Header("References")]
-    public CinemachineCamera cinemachineCamera;
+    [SerializeField] CinemachineCamera cinemachineCamera;
+    [SerializeField] Collider elevatorTrigger;
     private CinemachineBasicMultiChannelPerlin noiseComponent;
 
     [Header("Audio & Animation")]
-    public Animator elevatorAnimator;
-    public AudioSource movementAudioSource;
-    public AudioSource doorAudioSource;
+    [SerializeField] Animator elevatorAnimator;
+    [SerializeField] AudioSource movementAudioSource;
+    [SerializeField] AudioSource doorAudioSource;
 
     [Header("Elevator Settings")]
-    public bool isElevatorMoving = false;
+    [SerializeField] bool isElevatorMoving = false;
+    [SerializeField] bool isPlayerInside = false;
 
     [Tooltip("Intensity")]
-    public float movingAmplitude = 0.3f;
-    public float transitionSpeed = 5f;
+    [SerializeField] float movingAmplitude = 0.02f;
+    [SerializeField] float transitionSpeed = 5f;
 
     void Start()
     {
         GetCinemachineData();
-        StartElevatorSequence();
     }
 
     void Update()
@@ -48,14 +49,14 @@ public class MovingElevator : MonoBehaviour
     {
         if (noiseComponent == null) return;
 
-        float targetAmplitude = isElevatorMoving ? movingAmplitude : 0f;
+        float targetAmplitude = (isElevatorMoving && isPlayerInside) ? movingAmplitude : 0f;
 
         noiseComponent.AmplitudeGain = Mathf.Lerp(noiseComponent.AmplitudeGain, targetAmplitude, Time.deltaTime * transitionSpeed);
     }
 
     public void StartElevatorSequence()
     {
-        if (!isElevatorMoving)
+        if (!isElevatorMoving && isPlayerInside)
         {
             StartCoroutine(ElevatorRoutine());
         }
@@ -82,6 +83,29 @@ public class MovingElevator : MonoBehaviour
         if (doorAudioSource != null)
         {
             doorAudioSource.Play();
+        }
+
+        elevatorTrigger.enabled = false;
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        Debug.Log("¡Un objeto tocó el ascensor!: " + other.gameObject.name + " | Su Tag es: " + other.tag);
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInside = true;
+
+            StartElevatorSequence();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInside = false;
         }
     }
 }

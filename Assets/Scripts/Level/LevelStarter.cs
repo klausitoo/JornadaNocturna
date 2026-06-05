@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class LevelStarter : MonoBehaviour, IInteractable
 {
-    [SerializeField] GameObject lightsContainer;
+    [SerializeField] GameObject levelObjects;
     [SerializeField] float countdownDuration = 5f;
     [SerializeField] GameObject playerFlashlight;
 
@@ -41,17 +41,17 @@ public class LevelStarter : MonoBehaviour, IInteractable
     {
         yield return new WaitForSeconds(countdownDuration);
 
-        if (lightsContainer != null)
+        if (levelObjects != null)
         {
             // Turn off all lights
-            Light[] allLights = lightsContainer.GetComponentsInChildren<Light>();
+            Light[] allLights = levelObjects.GetComponentsInChildren<Light>();
             foreach (Light lights in allLights)
             {
                 lights.enabled = false;
             }
 
             // Change light color
-            Renderer[] allRenderers = lightsContainer.GetComponentsInChildren<Renderer>();
+            Renderer[] allRenderers = levelObjects.GetComponentsInChildren<Renderer>();
 
             foreach (Renderer ren in allRenderers)
             {
@@ -59,11 +59,11 @@ public class LevelStarter : MonoBehaviour, IInteractable
                 {
                     if (mat.HasProperty("_Color"))
                     {
-                        mat.SetColor("_Color", new Color32(5, 5, 5, 255));
+                        mat.SetColor("_Color", new Color32(8, 8, 8, 255));
                     }
                 }
             }
-            RenderSettings.ambientLight = new Color32(5, 5, 5, 255);
+            RenderSettings.ambientLight = new Color32(8, 8, 8, 255);
         }
     }
 }
