@@ -119,7 +119,11 @@ public class HealthSystem : MonoBehaviour
             StartCoroutine(InvincibilityFrames());
         }
     }
-    
+    public void OnRestartButtonPressed()
+{
+    Debug.Log("Botón de reinicio presionado");
+    ResetGame();
+}
     // Sobrecarga del método para mantener compatibilidad
     public void TakeDamage()
     {
