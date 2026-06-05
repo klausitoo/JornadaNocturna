@@ -8,6 +8,7 @@ public class LevelStarter : MonoBehaviour, IInteractable
     [SerializeField] float countdownDuration = 5f;
     [SerializeField] GameObject playerFlashlight;
     [SerializeField] AudioSource lightsOutSound;
+    [SerializeField] AudioSource interactSound;
 
     public static bool cosasRecogidas = false;
 
@@ -15,11 +16,14 @@ public class LevelStarter : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-
-
-
         if (!_isActivated)
         {
+            _isActivated = true;
+
+            if (interactSound != null)
+            {
+                interactSound.Play();
+            }
 
             if (playerFlashlight != null)
             {
@@ -39,7 +43,6 @@ public class LevelStarter : MonoBehaviour, IInteractable
             }
 
             StartCoroutine(LightsOutSequence());
-           
         }
     }
 
@@ -47,7 +50,6 @@ public class LevelStarter : MonoBehaviour, IInteractable
     {
         yield return new WaitForSeconds(countdownDuration);
 
-        _isActivated = true;
         cosasRecogidas = true;
 
         if (levelObjects != null)
