@@ -7,6 +7,7 @@ public class LevelStarter : MonoBehaviour, IInteractable
     [SerializeField] GameObject levelObjects;
     [SerializeField] float countdownDuration = 5f;
     [SerializeField] GameObject playerFlashlight;
+    [SerializeField] AudioSource lightsOutSound;
 
     public static bool cosasRecogidas = false;
 
@@ -19,11 +20,6 @@ public class LevelStarter : MonoBehaviour, IInteractable
 
         if (!_isActivated)
         {
-
-
-            _isActivated = true;
-            cosasRecogidas = true;
-            Debug.Log("MOCHILA RECOGIDA");
 
             if (playerFlashlight != null)
             {
@@ -51,6 +47,9 @@ public class LevelStarter : MonoBehaviour, IInteractable
     {
         yield return new WaitForSeconds(countdownDuration);
 
+        _isActivated = true;
+        cosasRecogidas = true;
+
         if (levelObjects != null)
         {
             // Turn off all lights
@@ -58,6 +57,11 @@ public class LevelStarter : MonoBehaviour, IInteractable
             foreach (Light lights in allLights)
             {
                 lights.enabled = false;
+            }
+
+            if (lightsOutSound != null)
+            {
+                lightsOutSound.Play();
             }
 
             // Change light color

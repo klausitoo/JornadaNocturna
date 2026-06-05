@@ -15,6 +15,9 @@ public class FlashlightController : MonoBehaviour
     [Header("Pickup")]
     [SerializeField] private bool giveFlashlightWhenThisObjectActivates = true;
 
+    [Header("Sound")]
+    [SerializeField] AudioSource toggleSound;
+
     private void Awake()
     {
         if (lightComponent == null)
@@ -101,6 +104,11 @@ public class FlashlightController : MonoBehaviour
 
         ForceLight(newState);
         playerStealth.SetFlashlightState(newState);
+
+        if (toggleSound != null)
+        {
+            toggleSound.Play();
+        }
 
         Debug.Log("Linterna visual prendida: " + newState);
     }
