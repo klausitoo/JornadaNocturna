@@ -36,6 +36,12 @@ public class Enemy : MonoBehaviour
     public bool damageOnlyOncePerAttack = true;
     private bool hasDamagedInThisAttack = false;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip footstepClip;
+    public float footstepInterval = 0.5f;
+    private float stepTimer = 0f;
+
     private NavMeshAgent Agent;
     private Animator anim;
     private bool isAttacking = false;
@@ -70,7 +76,7 @@ public class Enemy : MonoBehaviour
 
         playerLifeSystem = Player.GetComponent<HealthSystem>();
         playerStealth = Player.GetComponent<PlayerStealthState>();
-        
+
         if (playerStealth == null)
         {
             playerStealth = Player.GetComponentInParent<PlayerStealthState>();
@@ -100,6 +106,9 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+ 
+        HandleFootsteps();
+
         if (Player == null) return;
 
         float distance = Vector3.Distance(transform.position, Player.position);
@@ -133,6 +142,34 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void HandleFootsteps()
+    {
+        if (Agent != null && Agent.velocity.magnitude > 0.1f && !isAttacking)
+        {
+            stepTimer += Time.deltaTime;
+
+            if (stepTimer >= footstepInterval)
+            {
+                PlayFootstep();
+                stepTimer = 0f;
+            }
+        }
+        else
+        {
+            stepTimer = 0f;
+        }
+    }
+
+    private void PlayFootstep()
+    {
+        if (audioSource != null && footstepClip != null)
+        {
+            audioSource.pitch = Random.Range(0.85f, 1.15f);
+            audioSource.volume = Random.Range(0.8f, 1f);
+            audioSource.PlayOneShot(footstepClip);
+        }
+    }
+
     private bool CanDetectPlayer(float distance)
     {
         float currentDetectionRange = normalDetectionRange;
@@ -147,7 +184,7 @@ public class Enemy : MonoBehaviour
             if (playerStealth.IsFlashlightOn)
             {
                 currentDetectionRange = Mathf.Max(currentDetectionRange, flashlightDetectionRange);
-                Debug.Log("Linterna prendida detectada por el enemigo. Rango actual: " + currentDetectionRange);
+                //Debug.Log("Linterna prendida detectada por el enemigo. Rango actual: " + currentDetectionRange);
             }
         }
         else

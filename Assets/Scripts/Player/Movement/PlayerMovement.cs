@@ -31,6 +31,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Renderer meshRenderer;
     [SerializeField] private CapsuleCollider coll;
 
+    [Header("Audio / Footsteps")]
+    [SerializeField] private AudioSource footstepSource;
+    [SerializeField] private AudioClip concreteStepClip;
+    [SerializeField] private float walkStepInterval = 0.5f;
+    [SerializeField] private float runStepInterval = 0.3f;
+    [SerializeField] private float crouchStepInterval = 0.7f;
+
     private Vector2 _moveInput;
     private bool _isGrounded;
     private bool _isRunning;
@@ -42,10 +49,10 @@ public class PlayerMovement : MonoBehaviour
     private float staminaRegenRate = 20f;
     private float staminaRegenDelay = 2f;
     private float staminaDrainRate = 30f;
+    private float stepTimer = 0f;
 
     public float MaxStamina => maxStamina;
     public float CurrentStamina => currentStamina;
-
 
     private float staminaRegenDelayTimer;
 
@@ -83,25 +90,23 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         CheckGround();
-        //Debug.Log(currentStamina);
-        //Debug.Log(_isRunning);
         UpdateRigidBodyDamping();
         HandleMovement();
         HandleStamina();
         HandleStepClimbing();
+        HandleFootsteps();
     }
 
     private void FixedUpdate()
     {
         HandleCrouchTransition();
-
     }
 
     private void StoreMovementInput(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
     }
-    
+
     private void CheckGround()
     {
         _isGrounded = Physics.Raycast(
@@ -187,7 +192,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 staminaRegenDelayTimer = 0;
             }
-                
+
             return;
         }
 
@@ -197,6 +202,7 @@ public class PlayerMovement : MonoBehaviour
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
         }
     }
+
     private void HandleMovement()
     {
         if (!canRun)
@@ -218,7 +224,7 @@ public class PlayerMovement : MonoBehaviour
         forward.y = 0;
         right.y = 0;
 
-       Vector3 direction = forward.normalized * _moveInput.y + right.normalized * _moveInput.x;
+        Vector3 direction = forward.normalized * _moveInput.y + right.normalized * _moveInput.x;
 
         if (_isGrounded)
         {
@@ -229,9 +235,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            //Vector3 airForce = direction * 2f;
-            //rb.AddForce(airForce, ForceMode.Acceleration);
-
             Vector3 horizontalVelocity = new(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             float maxSpeed = _isRunning ? runSpeed : walkSpeed;
             if (horizontalVelocity.magnitude > maxSpeed)
@@ -252,7 +255,7 @@ public class PlayerMovement : MonoBehaviour
 
         float newHeight = Mathf.Lerp(_currentHeight, _targetHeight, crouchTransitionSpeed * Time.deltaTime);
         float currentCollCenter = coll.center.y;
-        float targetCollCenter = _targetHeight == crouchingHeight ?  crouchingCollCenter : standingCollCenter;
+        float targetCollCenter = _targetHeight == crouchingHeight ? crouchingCollCenter : standingCollCenter;
         float newCollCenter = Mathf.Lerp(currentCollCenter, targetCollCenter, crouchTransitionSpeed * Time.deltaTime);
         _currentHeight = newHeight;
         coll.height = newHeight;
@@ -277,10 +280,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (Physics.Raycast(bottomRayOrigin, forward, 0.5f))
         {
-            Debug.Log("Bottom ray hit something");
             if (!Physics.Raycast(topRayOrigin, forward, 0.55f))
             {
-                // Obtenemos con un Ray la altura de la superficie del siguiente escalon //
                 Vector3 downwardsRayOrigin = topRayOrigin + forward * 0.3f;
 
                 if (Physics.Raycast(downwardsRayOrigin, Vector3.down, out RaycastHit hit))
@@ -291,15 +292,40 @@ public class PlayerMovement : MonoBehaviour
                     transform.position += new Vector3(forward.x * 0.1f, targetStepHeight, forward.z * 0.1f);
                 }
             }
-            else
-            {
-                Debug.Log("Top ray hit something");
-            }
         }
     }
 
     public void SetIsGroundedValue(bool value)
     {
         _isGrounded = value;
+    }
+
+    private void HandleFootsteps()
+    {
+        if (!_isGrounded || _moveInput == Vector2.zero)
+        {
+            stepTimer = 0f;
+            return;
+        }
+
+        stepTimer += Time.deltaTime;
+
+        float currentInterval = _isCrouching ? crouchStepInterval : (_isRunning ? runStepInterval : walkStepInterval);
+
+        if (stepTimer >= currentInterval)
+        {
+            PlayFootstep();
+            stepTimer = 0f;
+        }
+    }
+
+    private void PlayFootstep()
+    {
+        if (footstepSource != null && concreteStepClip != null)
+        {
+            footstepSource.pitch = Random.Range(0.9f, 1.1f);
+            footstepSource.volume = Random.Range(0.2f, 0.3f);
+            footstepSource.PlayOneShot(concreteStepClip);
+        }
     }
 }
