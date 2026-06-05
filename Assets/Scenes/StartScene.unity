@@ -46412,6 +46412,10 @@ PrefabInstance:
       propertyPath: mensajeMochila
       value: 
       objectReference: {fileID: 1069736324}
+    - target: {fileID: 8912972685761921754, guid: 56a0666d63bbf2749ac434b3c9b3c5df, type: 3}
+      propertyPath: requiereMochila
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -75725,7 +75729,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 90.1603, y: 10.2456}
+  m_AnchoredPosition: {x: 96, y: -149}
   m_SizeDelta: {x: 380.3207, y: 29.5089}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1069736326
@@ -101662,7 +101666,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Que olvidadizo, tengo que agarrar mi mochila y largarme de aqui
+  m_text: Por fin llegue.. , tengo que agarrar mi mochila y largarme de aqui
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
