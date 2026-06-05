@@ -76,6 +76,7 @@ public class FlashlightController : MonoBehaviour
     {
         if (toggleAction != null && toggleAction.action.WasPressedThisFrame())
         {
+            Debug.Log("Input de toggle de linterna detectado.");
             ToggleFlashlight();
         }
     }
