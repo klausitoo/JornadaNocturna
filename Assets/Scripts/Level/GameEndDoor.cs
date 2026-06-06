@@ -9,8 +9,7 @@ public class GameEndDoor : MonoBehaviour, IInteractable
     [SerializeField] GameObject endLevelPanel;
 
     [Header("Settings")]
-    [SerializeField] float fadeDuration = 1.5f; 
-    [SerializeField] bool debugHasKey = false;
+    [SerializeField] float fadeDuration = 1.5f;
 
     private bool isLevelEnding = false;
 

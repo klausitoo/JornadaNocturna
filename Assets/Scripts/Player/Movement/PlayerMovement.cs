@@ -1,7 +1,5 @@
-using UnityEditor.Rendering.Canvas.ShaderGraph;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.XR;
 
 public class PlayerMovement : MonoBehaviour
 {

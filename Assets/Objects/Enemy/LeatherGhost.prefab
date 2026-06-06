@@ -236,6 +236,7 @@ GameObject:
   - component: {fileID: 3642786230422673807}
   - component: {fileID: 7252558462456139456}
   - component: {fileID: 3049170160882183103}
+  - component: {fileID: 21590080059284564}
   m_Layer: 0
   m_Name: LeatherGhost
   m_TagString: Untagged
@@ -284,7 +285,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!195 &3642786230422673807
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -319,14 +320,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 220ac412e017b5b46ac69af321d942ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  patrolWhileIdle: 0
   patrolPoints:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   Player: {fileID: 0}
-  detectionRange: 8
+  normalDetectionRange: 3
+  runningDetectionRange: 10
+  flashlightDetectionRange: 12
+  loseInterestTime: 3
   attackDistance: 2.5
   attackInterval: 2
+  damageAmount: 1
+  damageOnlyOncePerAttack: 1
+  audioSource: {fileID: 21590080059284564}
+  footstepClip: {fileID: 8300000, guid: 0a1bd63fbf2a0b040a568554fcd15bb1, type: 3}
+  footstepInterval: 1
 --- !u!95 &3049170160882183103
 Animator:
   serializedVersion: 7
@@ -349,6 +359,103 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &21590080059284564
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096669601498485815}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 6
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1125731701646040875
 GameObject:
   m_ObjectHideFlags: 0
@@ -1108,7 +1215,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4050190597754152704}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0063756397, y: 0.028426666, z: 0.22274958, w: 0.9744403}
+  m_LocalRotation: {x: 0.0063756406, y: 0.028426666, z: 0.2227496, w: 0.9744403}
   m_LocalPosition: {x: -0.23330039, y: 0.0014950939, z: 0.004100106}
   m_LocalScale: {x: 0.9999999, y: 0.9999999, z: 0.9999999}
   m_ConstrainProportionsScale: 0

@@ -23,7 +23,7 @@ public class LevelTransition : MonoBehaviour
 
     IEnumerator SequenceTransition()
     {
-        // Close the door
+        yield return new WaitForSeconds(1f);
         if (specificDoor != null)
         {
             specificDoor.ForceClose();
